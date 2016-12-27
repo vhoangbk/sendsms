@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">SendSms</string>
+
+    <string name="error_code_common">Can\'t connect to server, please wait for a while and try again.</string>
+    <string name="error_net_work">Can\'t connect to the Internet.</string>
+
+</resources>
