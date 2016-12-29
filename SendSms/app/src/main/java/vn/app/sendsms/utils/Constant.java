@@ -6,7 +6,11 @@ package vn.app.sendsms.utils;
 
 public class Constant {
 
-    public static final String SERVER_URL = "http://192.168.1.151";
+    public static final String SERVER_URL = "http://124.158.5.112";
+
+    public static final String CHAT_SERVER_URL = SERVER_URL + ":3000";
+
+    public static final String ON_SERVER_MESSAGE = "cl.message";
 
     public static final int API_TIMEOUT = 20 * 1000;
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import vn.app.sendsms.socket.SocketService;
 import vn.app.sendsms.utils.Constant;
 
 /**
@@ -22,11 +23,12 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     private Context mContext;
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Log.d(TAG, "action "+intent.getAction());
+        Log.d(TAG, "action ------------> "+intent.getAction());
         if (Intent.ACTION_BOOT_COMPLETED.equalsIgnoreCase(intent.getAction())){
             this.mContext = context;
             initAlarm();
             startAlarm();
+            startService(context);
         }
     }
     private void initAlarm() {
@@ -40,5 +42,9 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         Log.d(TAG, "startAlarm " + mAlarmManager);
         //30s emit action alarm reciver
         mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + Constant.TIME_REPEAT_INTERVAL, Constant.TIME_REPEAT_INTERVAL, mPendingIntent);
+    }
+
+    private void startService(Context context){
+        context.startService(new Intent(context, SocketService.class));
     }
 }

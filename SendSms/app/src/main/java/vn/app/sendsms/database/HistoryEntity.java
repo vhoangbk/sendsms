@@ -22,7 +22,9 @@ public class HistoryEntity extends Entity<History>{
     @Override
     public long add(History obj) {
         ContentValues values = new ContentValues();
-        values.put(DBDefinition.COLUMN_HISTORY_ID, obj.getId());
+        if (obj.getId() != 0) {
+            values.put(DBDefinition.COLUMN_HISTORY_ID, obj.getId());
+        }
         values.put(DBDefinition.COLUMN_HISTORY_FROM, obj.getFrom());
         values.put(DBDefinition.COLUMN_HISTORY_TO, obj.getTo());
         values.put(DBDefinition.COLUMN_HISTORY_CONTENT, obj.getContent());
@@ -70,18 +72,19 @@ public class HistoryEntity extends Entity<History>{
 
         Cursor mCursor = super.select(null);
         if (mCursor != null) {
-            mCursor.moveToFirst();
-            do {
-                int id = mCursor.getInt(0);
-                String from = mCursor.getString(1);
-                String to = mCursor.getString(2);
-                String content = mCursor.getString(3);
-                String time = mCursor.getString(4);
+            if (mCursor.moveToFirst()) {
+                do {
+                    int id = mCursor.getInt(0);
+                    String from = mCursor.getString(1);
+                    String to = mCursor.getString(2);
+                    String content = mCursor.getString(3);
+                    String time = mCursor.getString(4);
 
-                History history = new History(id, from, to, content, time);
+                    History history = new History(id, from, to, content, time);
 
-                listObj.add(history);
-            } while (mCursor.moveToNext());
+                    listObj.add(history);
+                } while (mCursor.moveToNext());
+            }
         }
         mCursor.close();
 
