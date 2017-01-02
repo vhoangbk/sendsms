@@ -3,9 +3,14 @@ package vn.app.sendsms.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import vn.app.sendsms.R;
+import vn.app.sendsms.database.MessageEntity;
+import vn.app.sendsms.model.Message;
 import vn.app.sendsms.socket.SocketService;
 
 /*
@@ -24,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnStart).setOnClickListener(this);
         findViewById(R.id.btnStop).setOnClickListener(this);
 
+
+
+
     }
 
 
@@ -41,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void start(){
         startService(new Intent(MainActivity.this, SocketService.class));
-
     }
 
     private void stop(){

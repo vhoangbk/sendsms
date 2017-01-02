@@ -12,10 +12,10 @@ public class DBDefinition {
     public static final String DATABASE_NAME = "sendsms.db";
 
     //dinh nghia ten bang va cac cot cho tung bang
-    public static final String TABLE_HISTORY="history";
-    public static final String COLUMN_HISTORY_ID = "history_id";
-    public static final String COLUMN_HISTORY_FROM = "history_from";
-    public static final String COLUMN_HISTORY_TO = "history_to";
-    public static final String COLUMN_HISTORY_CONTENT = "history_content";
-    public static final String COLUMN_HISTORY_TIME = "history_time";
+    public static final String TABLE_MESSAGE ="message";
+    public static final String COLUMN_MESSAGE_ID = "message_id_server";
+    public static final String COLUMN_MESSAGE_ID_SERVER = "message_id";
+    public static final String COLUMN_MESSAGE_CONTENT_SMS = "message_content_sms";
+    public static final String COLUMN_MESSAGE_DATA_SENT = "message_data_send";
+    public static final String COLUMN_MESSAGE_NUMBER_RECEIVER = "message_number_receiver";
 }

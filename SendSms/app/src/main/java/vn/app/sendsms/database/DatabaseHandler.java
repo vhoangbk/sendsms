@@ -21,15 +21,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String create_table_history = "CREATE TABLE " + DBDefinition.TABLE_HISTORY + " ("
-                + DBDefinition.COLUMN_HISTORY_ID
+        String create_table_message = "CREATE TABLE " + DBDefinition.TABLE_MESSAGE + " ("
+                + DBDefinition.COLUMN_MESSAGE_ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DBDefinition.COLUMN_HISTORY_FROM + " TEXT NOT NULL, "
-                + DBDefinition.COLUMN_HISTORY_TO + " TEXT NOT NULL, "
-                + DBDefinition.COLUMN_HISTORY_CONTENT + " TEXT, "
-                + DBDefinition.COLUMN_HISTORY_TIME + " TEXT)";
+                + DBDefinition.COLUMN_MESSAGE_ID_SERVER + " TEXT NOT NULL, "
+                + DBDefinition.COLUMN_MESSAGE_CONTENT_SMS + " TEXT NOT NULL, "
+                + DBDefinition.COLUMN_MESSAGE_DATA_SENT + " TEXT NOT NULL, "
+                + DBDefinition.COLUMN_MESSAGE_NUMBER_RECEIVER + " TEXT)";
 
-        db.execSQL(create_table_history);
+        db.execSQL(create_table_message);
 
     }
 
@@ -38,7 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String sqlDropTable = "DROP TABLE IF EXISTS ";
 
-        db.execSQL(sqlDropTable + DBDefinition.TABLE_HISTORY);
+        db.execSQL(sqlDropTable + DBDefinition.TABLE_MESSAGE);
 
         onCreate(db);
     }
