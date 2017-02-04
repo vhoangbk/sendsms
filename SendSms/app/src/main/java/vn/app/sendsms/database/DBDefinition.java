@@ -16,6 +16,7 @@ public class DBDefinition {
     public static final String COLUMN_MESSAGE_ID = "message_id_server";
     public static final String COLUMN_MESSAGE_ID_SERVER = "message_id";
     public static final String COLUMN_MESSAGE_CONTENT_SMS = "message_content_sms";
-    public static final String COLUMN_MESSAGE_DATA_SENT = "message_data_send";
+    public static final String COLUMN_MESSAGE_DATE_SENT = "message_date_send";
     public static final String COLUMN_MESSAGE_NUMBER_RECEIVER = "message_number_receiver";
+    public static final String COLUMN_MESSAGE_SEND_FLAG = "message_send_flag";
 }

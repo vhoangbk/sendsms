@@ -26,8 +26,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DBDefinition.COLUMN_MESSAGE_ID_SERVER + " TEXT NOT NULL, "
                 + DBDefinition.COLUMN_MESSAGE_CONTENT_SMS + " TEXT NOT NULL, "
-                + DBDefinition.COLUMN_MESSAGE_DATA_SENT + " TEXT NOT NULL, "
-                + DBDefinition.COLUMN_MESSAGE_NUMBER_RECEIVER + " TEXT)";
+                + DBDefinition.COLUMN_MESSAGE_DATE_SENT + " TEXT NOT NULL, "
+                + DBDefinition.COLUMN_MESSAGE_NUMBER_RECEIVER + " TEXT NOT NULL, "
+                + DBDefinition.COLUMN_MESSAGE_SEND_FLAG + " INTEGER)";
 
         db.execSQL(create_table_message);
 

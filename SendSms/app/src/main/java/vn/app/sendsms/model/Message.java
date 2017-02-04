@@ -18,6 +18,9 @@ public class Message extends Object{
     @SerializedName("number_receiver")
     private String numberReceiver;
 
+    //0: not send, 1: sent
+    private int sendFlag;
+
     public Message(){
 
     }
@@ -27,6 +30,15 @@ public class Message extends Object{
         this.contentSms = contentSms;
         this.dateSend = dateSend;
         this.numberReceiver = numberReceiver;
+        this.sendFlag = 0;
+    }
+
+    public Message(String idServer, String contentSms, long dateSend, String numberReceiver, int sendFlag) {
+        this.idServer = idServer;
+        this.contentSms = contentSms;
+        this.dateSend = dateSend;
+        this.numberReceiver = numberReceiver;
+        this.sendFlag = sendFlag;
     }
 
     public int getId() {
@@ -67,5 +79,13 @@ public class Message extends Object{
 
     public void setNumberReceiver(String numberReceiver) {
         this.numberReceiver = numberReceiver;
+    }
+
+    public void setSendFlag(int sendFlag) {
+        this.sendFlag = sendFlag;
+    }
+
+    public int getSendFlag() {
+        return sendFlag;
     }
 }

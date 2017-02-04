@@ -2,12 +2,18 @@ package vn.app.sendsms.receiver;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import vn.app.sendsms.activity.MainActivity;
+import vn.app.sendsms.database.MessageEntity;
+import vn.app.sendsms.model.Message;
 
 /**
  * start socket service
@@ -26,11 +32,16 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         if (ACTION_ALARM.equalsIgnoreCase(intent.getAction())){
             this.mContext = context;
 
-            //check current == setting time
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
             wakeLock();
+
+            MessageEntity messageEntity = new MessageEntity(context);
+            ArrayList<Message> listMessage = messageEntity.getMessageSend();
+            for (Message message : listMessage){
+                Log.d(TAG, message.getIdServer()+" "+message.getContentSms()+" "+message.getDateSend()+" "+message.getNumberReceiver()+" "+message.getSendFlag());
+                sendSms(context, message.getNumberReceiver(), message.getContentSms());
+                message.setSendFlag(1);
+                messageEntity.update(message);
+            }
 
         }
     }
@@ -50,5 +61,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void sendSms(Context context, String phoneNumber, String message){
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
+        intent.putExtra("sms_body", message);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

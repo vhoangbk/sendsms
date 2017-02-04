@@ -5,8 +5,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +28,8 @@ public class APIClient {
 
     public static final String URL_BASE = Constant.SERVER_URL + "/api/";
 
-    public static final String URL_LOGIN = URL_BASE + "login";
+    public static final String URL_REGISTER = URL_BASE + "register";
+    public static final String URL_WAKEUP = URL_BASE + "wakeup";
 
     public static final String TAG = APIClient.class.getSimpleName();
 
@@ -48,7 +52,7 @@ public class APIClient {
         if (mContext == null){
             return;
         }
-        if (progress.isShowing()){
+        if (progress != null && progress.isShowing()){
             return;
         }
         progress = ProgressDialog.show(mContext, "",
@@ -59,29 +63,29 @@ public class APIClient {
         if (mContext == null){
             return;
         }
-        if (progress.isShowing()){
+        if (progress != null && progress.isShowing()){
             progress.dismiss();
         }
 
     }
 
-    private void jsonRequest(int method, String url, JSONObject params, com.android.volley.Response.Listener listener, com.android.volley.Response.ErrorListener error, String tag) {
-        JsonObjectRequest jsonReq = new JsonObjectRequest(method, url, params, listener, error);
-        jsonReq.setRetryPolicy(new DefaultRetryPolicy(
+    private void stringRequest(int method, String url, com.android.volley.Response.Listener listener, com.android.volley.Response.ErrorListener error, String tag) {
+        StringRequest stringRequest = new StringRequest(method, url, listener, error);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 Constant.API_TIMEOUT,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        SendSmsApplication.getInstance().addToRequestQueue(jsonReq, tag);
+        SendSmsApplication.getInstance().addToRequestQueue(stringRequest, tag);
     }
     
 
-    public void makeJsonRequestWithCallBackAndTag(Context context, String tag, int method, final String url, JSONObject params, final boolean showDialog, final boolean showAlert, final APIClientListener callBack) {
+    public void stringGetRequest(Context context, final String url, final boolean isShowDialog, final boolean isShowAlert, final APIClientListener callBack) {
 
         this.mContext = context;
 
-        Log.d(TAG, "[REQUEST: URL " + url + "] \n" + params);
+        Log.d(TAG, "[REQUEST] URL " + url);
 
-        if (showAlert) {
+        if (isShowAlert) {
             if (Utils.isOnline(mContext) == false) {
                 callBack.onError(new JSONObject());
                 Utils.showAlertInfo(mContext, mContext.getString(R.string.error_net_work));
@@ -89,39 +93,31 @@ public class APIClient {
             }
         }
 
-        if (showDialog) {
+        if (isShowDialog) {
             showDialog();
         }
 
         com.android.volley.Response.Listener successListener = new com.android.volley.Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                Log.d(TAG, "[RESPONSE: URL " + url + "] \n " + response);
-                if (showDialog) {
+                Log.d(TAG, "[RESPONSE] URL " + url + " \n " + response);
+                if (isShowDialog) {
                     dismissDialog();
                 }
-                if (response instanceof JSONObject) {
-                    final JSONObject jsonObj = (JSONObject) response;
-                    try {
-                        int result = jsonObj.getInt("result");
-                        if (result == 0) {
-                            //success
-                            callBack.onSuccess(jsonObj);
-                        } else {
-                            //error
 
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        //error data
+                try {
+                    JSONObject jsonObj = new JSONObject(response.toString());
+                    boolean success = jsonObj.getBoolean("success");
+                    if (success) {
+                        //success
+                        callBack.onSuccess(jsonObj);
+                    } else {
                         callBack.onError(jsonObj);
-                        if (showAlert) {
-                            Utils.showAlertInfo(mContext, mContext.getString(R.string.error_code_common));
-                        }
                     }
-                } else {
-                    if (showAlert) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callBack.onError(new JSONObject());
+                    if (isShowAlert) {
                         Utils.showAlertInfo(mContext, mContext.getString(R.string.error_code_common));
                     }
                 }
@@ -133,18 +129,19 @@ public class APIClient {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "[ERROR] " + url + " " + error);
-                callBack.onError(new JSONObject());
-                if (showDialog) {
+
+                if (isShowDialog) {
                     dismissDialog();
                 }
-
                 //network error, time out, server error
-                if (showAlert) {
+                if (isShowAlert) {
                     Utils.showAlertInfo(mContext, mContext.getString(R.string.error_code_common));
                 }
+                callBack.onError(new JSONObject());
             }
         };
+        stringRequest(Request.Method.GET, url, successListener, errorListener, "");
 
-        jsonRequest(method, url, params, successListener, errorListener, tag);
     }
+
 }

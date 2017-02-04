@@ -23,6 +23,7 @@ public class SendSmsApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
     }
 
     public static synchronized SendSmsApplication getInstance() {
