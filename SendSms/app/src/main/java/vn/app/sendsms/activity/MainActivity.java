@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import vn.app.sendsms.R;
-import vn.app.sendsms.database.DBDefinition;
 import vn.app.sendsms.database.MessageEntity;
 import vn.app.sendsms.model.Message;
 import vn.app.sendsms.network.APIClient;
@@ -109,4 +108,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //30s emit action alarm reciver
         mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + Constant.TIME_REPEAT_INTERVAL, Constant.TIME_REPEAT_INTERVAL, mPendingIntent);
     }
+
+
 }

@@ -1,17 +1,16 @@
 package vn.app.sendsms.receiver;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
-import vn.app.sendsms.activity.MainActivity;
 import vn.app.sendsms.database.MessageEntity;
 import vn.app.sendsms.model.Message;
 
@@ -26,6 +25,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     public static final String ACTION_ALARM = "vn.app.sendsms.alarm";
     private Context mContext;
 
+    private static String SENT = "SMS_SENT";
+    private static String DELIVERED = "SMS_DELIVERED";
+    private static int MAX_SMS_MESSAGE_LENGTH = 160;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "action "+intent.getAction());
@@ -38,7 +41,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             ArrayList<Message> listMessage = messageEntity.getMessageSend();
             for (Message message : listMessage){
                 Log.d(TAG, message.getIdServer()+" "+message.getContentSms()+" "+message.getDateSend()+" "+message.getNumberReceiver()+" "+message.getSendFlag());
-                sendSms(context, message.getNumberReceiver(), message.getContentSms());
+                sendSMS(context, message.getNumberReceiver(), message.getContentSms());
                 message.setSendFlag(1);
                 messageEntity.update(message);
             }
@@ -63,10 +66,17 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         }
     }
 
-    private void sendSms(Context context, String phoneNumber, String message){
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
-        intent.putExtra("sms_body", message);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    public void sendSMS(Context context, String phoneNumber, String message) {
+        PendingIntent piSent = PendingIntent.getBroadcast(context, 0, new Intent(SENT), 0);
+        PendingIntent piDelivered = PendingIntent.getBroadcast(context, 0,new Intent(DELIVERED), 0);
+        SmsManager smsManager = SmsManager.getDefault();
+
+        int length = message.length();
+        if(length > MAX_SMS_MESSAGE_LENGTH) {
+            ArrayList<String> messagelist = smsManager.divideMessage(message);
+            smsManager.sendMultipartTextMessage(phoneNumber, null, messagelist, null, null);
+        }
+        else
+            smsManager.sendTextMessage(phoneNumber, null, message, piSent, piDelivered);
     }
 }
