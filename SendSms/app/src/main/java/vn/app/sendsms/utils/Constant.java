@@ -6,7 +6,7 @@ package vn.app.sendsms.utils;
 
 public class Constant {
 
-    public static final String SERVER_URL = "http://125.212.228.225";
+    public static final String SERVER_URL = "http://202.92.5.65";
 
     public static final String CHAT_SERVER_URL = SERVER_URL + ":3000";
 
